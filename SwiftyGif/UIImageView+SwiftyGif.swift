@@ -125,8 +125,8 @@ public extension UIImageView {
             loader.startAnimating()
         }
         
-        let task = URLSession.shared.dataTask(with: url) { (data, _ , _) in
-            guard let strongSelf = self, let delegate = Optional.some(strongSelf.delegate) else { return }
+        let task = URLSession.shared.dataTask(with: url) { [weak self] (data, _ , _) in
+            guard let strongSelf = self, let delegate = strongSelf.delegate else { return }
 
             DispatchQueue.main.async {
                 loader.removeFromSuperview()

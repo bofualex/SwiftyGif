@@ -126,7 +126,7 @@ public extension UIImageView {
         }
         
         let task = URLSession.shared.dataTask(with: url) { (data, _ , _) in
-            guard let strongSelf = self, let delegate = strongSelf.delegate else { return }
+            guard let strongSelf = self, let delegate = Optional.some(strongSelf.delegate) else { return }
 
             DispatchQueue.main.async {
                 loader.removeFromSuperview()

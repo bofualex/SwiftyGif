@@ -126,13 +126,15 @@ public extension UIImageView {
         }
         
         let task = URLSession.shared.dataTask(with: url) { (data, _ , _) in
+            guard let strongSelf = self, let delegate = strongSelf.delegate else { return }
+
             DispatchQueue.main.async {
                 loader.removeFromSuperview()
                 if let data = data {
-                    self.setGifImage(UIImage.init(gifData: data), manager: manager, loopCount: loopCount)
-                    self.delegate?.gifURLDidFinish?(sender: self)
+                    strongSelf.setGifImage(UIImage.init(gifData: data), manager: manager, loopCount: loopCount)
+                    delegate.gifURLDidFinish?(sender: strongSelf)
                 } else {
-                    self.delegate?.gifURLDidFail?(sender: self)
+                    delegate.gifURLDidFail?(sender: strongSelf)
                 }
             }
         }

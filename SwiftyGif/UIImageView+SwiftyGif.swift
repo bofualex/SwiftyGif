@@ -38,6 +38,19 @@ let _delegateKey = malloc(4)
 
 public extension UIImageView {
     
+    private struct AssociatedKey {
+        static var gifDataString = "gifDataString"
+    }
+    
+    public var gifData: Data? {
+        get {
+            return objc_getAssociatedObject(self, &AssociatedKey.gifDataString) as? Data ?? nil
+        }
+        set {
+            objc_setAssociatedObject(self, &AssociatedKey.gifDataString, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        }
+    }
+    
     // MARK: Inits
     
     /**
@@ -131,6 +144,7 @@ public extension UIImageView {
             DispatchQueue.main.async {
                 loader.removeFromSuperview()
                 if let data = data {
+                    strongSelf.gifData = data
                     strongSelf.setGifImage(UIImage.init(gifData: data), manager: manager, loopCount: loopCount)
                     delegate.gifURLDidFinish?(sender: strongSelf)
                 } else {
